@@ -59,47 +59,56 @@ export const markWorkingDay = async() => {
 
 
 export const markCheckIn = async () => {
-    const officeStartTime = new Date();
-    officeStartTime.setHours(9, 30, 0, 0); // Set to 9:30 AM
+  const officeStartTime = new Date();
+  officeStartTime.setHours(9, 30, 0, 0); // Set to 9:30 AM
 
-    const currentTime = new Date();
-    const lateDuration = Math.max(0, Math.floor((currentTime - officeStartTime) / (1000 * 60))); // Calculate difference in minutes
+  const currentTime = new Date();
 
-    const d = await getTodayDate();
-    await prisma.dailydata.update({
-        where: {
-            date: d
-        },
-        data: {
-            inTime: currentTime,
-            lateDuration
-        }
-    });
+  // ✅ Explicitly use .getTime() to avoid TypeScript arithmetic errors
+  const lateDuration = Math.max(
+    0,
+    Math.floor((currentTime.getTime() - officeStartTime.getTime()) / (1000 * 60))
+  );
 
-    revalidatePath("");
+  const d = await getTodayDate();
+  await prisma.dailydata.update({
+    where: {
+      date: d,
+    },
+    data: {
+      inTime: currentTime,
+      lateDuration,
+    },
+  });
+
+  revalidatePath("");
 };
 
 
-
 export const markCheckout = async () => {
-    const officeEndTime = new Date();
-    officeEndTime.setHours(16, 30, 0, 0); // Set to 4:30 PM
+  const officeEndTime = new Date();
+  officeEndTime.setHours(16, 30, 0, 0); // Set to 4:30 PM
 
-    const currentTime = new Date();
-    const overTimeDuration = Math.max(0, Math.floor((currentTime - officeEndTime) / (1000 * 60))); // Calculate difference in minutes
+  const currentTime = new Date();
 
-    const d = await getTodayDate();
-    await prisma.dailydata.update({
-        where: {
-            date: d
-        },
-        data: {
-            outTime: currentTime,
-            overTimeDuration
-        }
-    });
+  // ✅ Explicitly use .getTime() to avoid TypeScript arithmetic errors
+  const overTimeDuration = Math.max(
+    0,
+    Math.floor((currentTime.getTime() - officeEndTime.getTime()) / (1000 * 60))
+  );
 
-    revalidatePath("");
+  const d = await getTodayDate();
+  await prisma.dailydata.update({
+    where: {
+      date: d,
+    },
+    data: {
+      outTime: currentTime,
+      overTimeDuration,
+    },
+  });
+
+  revalidatePath("");
 };
 
 
