@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+
+model MentalHealthAssessment {
+  id                  Int      @id @default(autoincrement())
+
+  sadness             Boolean  @default(false)
+  euphoric            Boolean  @default(false)
+  exhausted           Boolean  @default(false)
+  sleep_disorder      Boolean  @default(false)
+  mood_swing          Boolean  @default(false)
+  suicidal_thoughts   Boolean  @default(false)
+  anorexia            Boolean  @default(false)
+  authority_respect   Boolean  @default(false)
+  try_explanation     Boolean  @default(false)
+  aggressive_response Boolean  @default(false)
+  ignore_and_move_on  Boolean  @default(false)
+  nervous_breakdown   Boolean  @default(false)
+  admit_mistakes      Boolean  @default(false)
+  overthinking        Boolean  @default(false)
+
+
+  concentration       Int      @default(5)
+  optimism           Int      @default(5)
+
+  // Timestamps
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+
+
+  @@map("mental_health_assessments")
+}
+
+
+
+model userdata {
+  id          Int       @id @default(autoincrement())
+  name        String
+  jobTenure   Int?
+
+}
+
+model dailydata {
+  id        Int           @id @default(autoincrement())
+  date      DateTime      @unique
+  currentStatus String?
+  todayTast Int @default(0)
+  workingDay Boolean @default(true)
+  inTime    DateTime?
+  outTime   DateTime?
+  EmployeeSatisfaction String?
+  WorkQuality String?
+  overTimeDuration Int @default(0)
+  lateDuration Int @default(0)
+  stress Int @default(0) // 1-10
+  BreakDuration Int @default(0)
+}
+
+
